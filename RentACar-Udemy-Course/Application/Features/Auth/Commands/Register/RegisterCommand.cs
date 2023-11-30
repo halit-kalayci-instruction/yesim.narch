@@ -1,7 +1,9 @@
 ﻿using Application.Features.Auth.Rules;
+using Application.Features.OperationClaims.Constants;
 using Application.Services.AuthService;
 using Application.Services.Repositories;
 using Core.Application.Dtos;
+using Core.Application.Pipelines.Authorization;
 using Core.Security.Entities;
 using Core.Security.Hashing;
 using Core.Security.JWT;
@@ -9,10 +11,12 @@ using MediatR;
 
 namespace Application.Features.Auth.Commands.Register;
 
-public class RegisterCommand : IRequest<RegisteredResponse>
+public class RegisterCommand : IRequest<RegisteredResponse>, ISecuredRequest
 {
     public UserForRegisterDto UserForRegisterDto { get; set; }
     public string IpAddress { get; set; }
+
+    public string[] Roles => new string[] { };
 
     public RegisterCommand()
     {

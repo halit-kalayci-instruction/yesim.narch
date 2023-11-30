@@ -1,8 +1,10 @@
 ﻿using Application.Features.Auth.Commands.EnableEmailAuthenticator;
+using Application.Features.Auth.Commands.EnableOtpAuthenticator;
 using Application.Features.Auth.Commands.Login;
 using Application.Features.Auth.Commands.RefreshToken;
 using Application.Features.Auth.Commands.Register;
 using Application.Features.Auth.Commands.VerifyEmailAuthenticator;
+using Application.Features.Auth.Commands.VerifyOtpAuthenticator;
 using Core.Application.Dtos;
 using Core.Security.Entities;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +41,25 @@ namespace WebApi.Controllers
                 setRefreshTokenToCookie(result.RefreshToken);
 
             return Ok(result.ToHttpResponse());
+        }
+
+        [HttpGet("EnableOtpAuthenticator")]
+        public async Task<IActionResult> EnableOtpAuthenticator()
+        {
+            EnableOtpAuthenticatorCommand enableOtpAuthenticatorCommand = new() { UserId = getUserIdFromRequest() };
+            EnabledOtpAuthenticatorResponse result = await Mediator.Send(enableOtpAuthenticatorCommand);
+
+            return Ok(result);
+        }
+
+        [HttpPost("VerifyOtpAuthenticator")]
+        public async Task<IActionResult> VerifyOtpAuthenticator([FromBody] string authenticatorCode)
+        {
+            VerifyOtpAuthenticatorCommand verifyEmailAuthenticatorCommand =
+                new() { UserId = getUserIdFromRequest(), ActivationCode = authenticatorCode };
+
+            await Mediator.Send(verifyEmailAuthenticatorCommand);
+            return Ok();
         }
 
         [HttpPost("Register")]
