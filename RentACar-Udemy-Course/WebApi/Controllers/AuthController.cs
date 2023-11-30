@@ -1,6 +1,8 @@
-﻿using Application.Features.Auth.Commands.Login;
+﻿using Application.Features.Auth.Commands.EnableEmailAuthenticator;
+using Application.Features.Auth.Commands.Login;
 using Application.Features.Auth.Commands.RefreshToken;
 using Application.Features.Auth.Commands.Register;
+using Application.Features.Auth.Commands.VerifyEmailAuthenticator;
 using Core.Application.Dtos;
 using Core.Security.Entities;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +14,15 @@ namespace WebApi.Controllers
     [ApiController]
     public class AuthController : BaseController
     {
+        private readonly WebApiConfiguration _configuration;
+
+        public AuthController(IConfiguration configuration)
+        {
+            const string configurationSection = "WebAPIConfiguration";
+            _configuration =
+                configuration.GetSection(configurationSection).Get<WebApiConfiguration>()
+                ?? throw new NullReferenceException($"\"{configurationSection}\" section cannot found in configuration.");
+        }
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
@@ -24,7 +35,8 @@ namespace WebApi.Controllers
 
             LoggedResponse result = await Mediator.Send(loginCommand);
 
-            setRefreshTokenToCookie(result.RefreshToken);
+            if (result.RefreshToken is not null)
+                setRefreshTokenToCookie(result.RefreshToken);
 
             return Ok(result.ToHttpResponse());
         }
@@ -47,6 +59,23 @@ namespace WebApi.Controllers
             RefreshedTokensResponse result = await Mediator.Send(refreshTokenCommand);
             setRefreshTokenToCookie(result.RefreshToken);
             return Created(uri: "", result.AccessToken);
+        }
+
+        [HttpGet("EnableEmailAuthenticator")]
+        public async Task<IActionResult> EnableEmailAuthenticator()
+        {
+            EnableEmailAuthenticatorCommand enableEmailAuthenticatorCommand =
+                new() { UserId = getUserIdFromRequest(), VerifyEmailUrlPrefix = $"{_configuration.ApiDomain}/Auth/VerifyEmailAuthenticator" };
+            await Mediator.Send(enableEmailAuthenticatorCommand);
+
+            return Ok();
+        }
+
+        [HttpGet("VerifyEmailAuthenticator")]
+        public async Task<IActionResult> VerifyEmailAuthenticator([FromQuery] VerifyEmailAuthenticatorCommand verifyEmailAuthenticatorCommand)
+        {
+            await Mediator.Send(verifyEmailAuthenticatorCommand);
+            return Ok();
         }
 
 
