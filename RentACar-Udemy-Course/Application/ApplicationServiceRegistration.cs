@@ -1,6 +1,12 @@
-﻿using Core.Application.Pipelines.Transaction;
+﻿using Application.Services.AuthenticatorService;
+using Application.Services.AuthService;
+using Application.Services.UsersService;
+using Core.Application.Pipelines.Authorization;
+using Core.Application.Pipelines.Transaction;
 using Core.Application.Pipelines.Validation;
 using Core.Application.Rules;
+using Core.Mailing;
+using Core.Mailing.MailKitImplementations;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -26,11 +32,14 @@ public static class ApplicationServiceRegistration
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-
+            configuration.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
             configuration.AddOpenBehavior(typeof(RequestValidationBehavior<,>));
             configuration.AddOpenBehavior(typeof(TransactionScopeBehavior<,>));
         });
-
+        services.AddSingleton<IMailService, MailKitMailService>();
+        services.AddScoped<IAuthService, AuthManager>();
+        services.AddScoped<IAuthenticatorService, AuthenticatorManager>();
+        services.AddScoped<IUserService, UserManager>();
         return services;
     }
 
