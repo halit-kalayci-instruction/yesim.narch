@@ -5,6 +5,8 @@ using Core.Application.Pipelines.Authorization;
 using Core.Application.Pipelines.Transaction;
 using Core.Application.Pipelines.Validation;
 using Core.Application.Rules;
+using Core.CrossCuttingConcerns.Logging.Serilog;
+using Core.CrossCuttingConcerns.Logging.Serilog.Logger;
 using Core.Mailing;
 using Core.Mailing.MailKitImplementations;
 using FluentValidation;
@@ -36,6 +38,8 @@ public static class ApplicationServiceRegistration
             configuration.AddOpenBehavior(typeof(RequestValidationBehavior<,>));
             configuration.AddOpenBehavior(typeof(TransactionScopeBehavior<,>));
         });
+        services.AddSingleton<LoggerServiceBase, FileLogger>();
+
         services.AddSingleton<IMailService, MailKitMailService>();
         services.AddScoped<IAuthService, AuthManager>();
         services.AddScoped<IAuthenticatorService, AuthenticatorManager>();

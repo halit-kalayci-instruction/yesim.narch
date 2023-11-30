@@ -1,5 +1,7 @@
-﻿using Application.Services.Repositories;
+﻿using Application.Features.OperationClaims.Constants;
+using Application.Services.Repositories;
 using AutoMapper;
+using Core.Application.Pipelines.Authorization;
 using Core.Application.Requests;
 using Core.Application.Responses;
 using Core.Persistence.Paging;
@@ -13,9 +15,11 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Brands.Queries.GetList;
 
-public class GetListBrandQuery:IRequest<GetListResponse<GetListBrandListItemDto>>
+public class GetListBrandQuery:IRequest<GetListResponse<GetListBrandListItemDto>>, ISecuredRequest
 {
     public PageRequest PageRequest { get; set; }
+
+    public string[] Roles => new string[] { "GetListBrand" };
 
     public class GetListBrandQueryHandler : IRequestHandler<GetListBrandQuery, GetListResponse<GetListBrandListItemDto>>
     {
