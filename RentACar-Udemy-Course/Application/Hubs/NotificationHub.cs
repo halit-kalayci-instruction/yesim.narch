@@ -14,5 +14,15 @@ namespace Application.Hubs
         {
             return base.OnConnectedAsync();
         }
+
+        public async Task JoinGroup(string groupName)
+        {
+           await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+
+           // Gruptaki tüm elemanlar => Group()
+           // Gruptaki çağrıyı yapan client dışındaki tüm elemanlar => OthersInGroup
+           await Clients.Group(groupName).SendAsync("NewUser", Context.ConnectionId + " has joined to group");
+        }
     }
 }
+// 3:45
