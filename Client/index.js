@@ -1,5 +1,7 @@
 const input = document.querySelector("#message")
 const btn = document.querySelector("#sendBtn")
+const connectedUserList = document.querySelector("#connectedUserList");
+
 
 let connectionId;
 const connection = new signalR
@@ -14,6 +16,15 @@ connection.on('MessageReceived', (message) => {
 
 connection.on('ConnectedToHub', (id) => {
     connectionId = id;
+})
+
+connection.on("NewConnection", (clients) => {
+    connectedUserList.innerHTML = "";
+    clients.forEach(client => {
+        let liElement = document.createElement("li");
+        liElement.innerHTML = client;
+        connectedUserList.appendChild(liElement);
+    })
 })
 
 connection.start().then(() => { })
