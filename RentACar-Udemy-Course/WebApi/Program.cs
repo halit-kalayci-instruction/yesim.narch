@@ -42,6 +42,18 @@ builder.Services
             ValidAudience = tokenOptions.Audience,
             IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey),
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                if(context.Request.Query.TryGetValue("access_token", out var token))
+                {
+                    context.Token = token;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddSwaggerGen(opt =>
@@ -61,6 +73,8 @@ builder.Services.AddSwaggerGen(opt =>
         }
     );
     opt.OperationFilter<BearerSecurityRequirementOperationFilter>();
+
+
 });
 
 builder.Services.AddCors(

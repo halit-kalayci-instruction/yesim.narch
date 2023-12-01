@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 
 namespace WebApi.Hubs
 {
+    [Authorize(Roles = "Admin")]
     public class ChatHub : Hub
     {
         List<string> messages;

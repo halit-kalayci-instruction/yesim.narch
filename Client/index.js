@@ -1,12 +1,18 @@
 const input = document.querySelector("#message")
 const btn = document.querySelector("#sendBtn")
+const connectBtn = document.querySelector("#connectBtn")
 const connectedUserList = document.querySelector("#connectedUserList");
-
+const tokenInput = document.querySelector("#token");
 
 let connectionId;
 const connection = new signalR
     .HubConnectionBuilder()
-    .withUrl("https://localhost:7285/api/chat", { skipNegotiation: true, transport: signalR.HttpTransportType.WebSockets })
+    .withUrl("https://localhost:7285/api/chat",
+        {
+            skipNegotiation: true,
+            transport: signalR.HttpTransportType.WebSockets,
+            accessTokenFactory: () => { return tokenInput.value }
+        })
     .build();
 
 // on fonksiyonları
@@ -27,7 +33,10 @@ connection.on("NewConnection", (clients) => {
     })
 })
 
-connection.start().then(() => { })
+connectBtn.addEventListener('click', () => {
+    connection.start().then(() => { })
+})
+
 
 // Client tarafından Sunucu tarafını execute etmek
 
