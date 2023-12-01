@@ -49,7 +49,7 @@ public class CreateBrandCommand:IRequest<CreatedBrandResponse>,ITransactionalReq
 
             CreatedBrandResponse createdBrandResponse = _mapper.Map<CreatedBrandResponse>(brand);
 
-            await _notificationHub.Clients.All.SendAsync("NewBrandAdded", createdBrandResponse);
+            //await _notificationHub.Clients.All.SendAsync("NewBrandAdded", createdBrandResponse);
 
             return createdBrandResponse;
         }
