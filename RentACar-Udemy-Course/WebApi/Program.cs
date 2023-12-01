@@ -1,10 +1,13 @@
 using Application;
+using Application.DatabaseSubscriptions;
+using Application.DatabaseSubscriptions.Middleware;
 using Application.Hubs;
 using Core.CrossCuttingConcerns.Exceptions.Extensions;
 using Core.Security;
 using Core.Security.Encryption;
 using Core.Security.JWT;
 using Core.WebAPI.Extensions.Swagger;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -22,6 +25,8 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
+
+builder.Services.AddSingleton<DatabaseSubscription<Brand>>();
 
 const string tokenOptionsConfigurationSection = "TokenOptions";
 TokenOptions tokenOptions =
@@ -101,6 +106,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseDatabaseSubscription<DatabaseSubscription<Brand>>("Brands");
 
 //app.MapControllers();
 app.UseEndpoints((endpoints) =>
