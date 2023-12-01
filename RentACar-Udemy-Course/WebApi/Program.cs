@@ -7,7 +7,10 @@ using Core.WebAPI.Extensions.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using Persistence;
+using WebApi;
+using WebApi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +21,8 @@ builder.Services.AddSecurityServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSignalR();
 
-// appSettings.json'dan tokenoptions'ý oku
 const string tokenOptionsConfigurationSection = "TokenOptions";
 TokenOptions tokenOptions =
     builder.Configuration.GetSection(tokenOptionsConfigurationSection).Get<TokenOptions>()
@@ -60,6 +63,13 @@ builder.Services.AddSwaggerGen(opt =>
     opt.OperationFilter<BearerSecurityRequirementOperationFilter>();
 });
 
+builder.Services.AddCors(
+    opt =>
+        opt.AddDefaultPolicy(p =>
+        {
+            p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        })
+);
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -73,9 +83,23 @@ app.ConfigureCustomExceptionMiddleware();
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllers();
+app.UseEndpoints((endpoints) =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<ChatHub>("/api/chat");
+});
+
+
+const string webApiConfigurationSection = "WebAPIConfiguration";
+WebApiConfiguration webApiConfiguration =
+    app.Configuration.GetSection(webApiConfigurationSection).Get<WebApiConfiguration>()
+    ?? throw new InvalidOperationException($"\"{webApiConfigurationSection}\" section cannot found in configuration.");
+app.UseCors(opt => opt.WithOrigins(webApiConfiguration.AllowedOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 
 app.Run();
