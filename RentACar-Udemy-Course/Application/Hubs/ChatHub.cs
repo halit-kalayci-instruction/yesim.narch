@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-namespace WebApi.Hubs
+namespace Application.Hubs
 {
     [Authorize(Roles = "Admin")]
     public class ChatHub : Hub

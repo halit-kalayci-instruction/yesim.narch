@@ -1,4 +1,5 @@
 using Application;
+using Application.Hubs;
 using Core.CrossCuttingConcerns.Exceptions.Extensions;
 using Core.Security;
 using Core.Security.Encryption;
@@ -10,7 +11,6 @@ using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using Persistence;
 using WebApi;
-using WebApi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -107,6 +107,7 @@ app.UseEndpoints((endpoints) =>
 {
     endpoints.MapControllers();
     endpoints.MapHub<ChatHub>("/api/chat");
+    endpoints.MapHub<NotificationHub>("/api/notificationhub");
 });
 
 

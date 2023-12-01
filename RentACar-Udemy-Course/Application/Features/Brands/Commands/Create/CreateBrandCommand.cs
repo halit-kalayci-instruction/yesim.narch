@@ -1,9 +1,11 @@
 ﻿using Application.Features.Brands.Rules;
+using Application.Hubs;
 using Application.Services.Repositories;
 using AutoMapper;
 using Core.Application.Pipelines.Transaction;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,7 @@ public class CreateBrandCommand:IRequest<CreatedBrandResponse>,ITransactionalReq
         private readonly IBrandRepository _brandRepository;
         private readonly IMapper _mapper;
         private readonly BrandBusinessRules _brandBusinessRules;
+        private readonly IHubContext<NotificationHub> _notificationHub; 
 
         public CreateBrandCommandHandler(IBrandRepository brandRepository, IMapper mapper, BrandBusinessRules brandBusinessRules)
         {
@@ -44,6 +47,9 @@ public class CreateBrandCommand:IRequest<CreatedBrandResponse>,ITransactionalReq
             //await _brandRepository.AddAsync(brand2);
 
             CreatedBrandResponse createdBrandResponse = _mapper.Map<CreatedBrandResponse>(brand);
+
+            await _notificationHub.Clients.All.SendAsync("NewBrandAdded", createdBrandResponse);
+
             return createdBrandResponse;
         }
     }
