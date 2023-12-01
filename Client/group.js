@@ -1,5 +1,11 @@
 const groupInput = document.querySelector("#group")
-const button = document.querySelector("#joinBtn")
+const connectBtn = document.querySelector("#connectBtn")
+const tokenInput = document.querySelector("#token");
+
+
+const select = document.querySelector("#roleSelect");
+const messageInput = document.querySelector("#message");
+const sendBtn = document.querySelector("#sendBtn");
 
 const connection = new signalR
     .HubConnectionBuilder()
@@ -7,17 +13,19 @@ const connection = new signalR
         {
             skipNegotiation: true,
             transport: signalR.HttpTransportType.WebSockets,
-            // accessTokenFactory: () => { return tokenInput.value }
+            accessTokenFactory: () => { return tokenInput.value }
         })
     .withAutomaticReconnect([5000, 5000])
     .build();
 
 connection.on('NewUser', (info) => console.log(info));
 
-connection.start().then(() => {
+connection.on('MessageReceived', (message) => console.log("Yeni bir duyuru var: ", message))
 
-});
+connectBtn.addEventListener('click', () => {
+    connection.start().then(() => { })
+})
 
-button.addEventListener('click', () => {
-    connection.invoke("JoinGroup", groupInput.value)
+sendBtn.addEventListener('click', () => {
+    connection.invoke("SendMessage", { group: select.value, message: messageInput.value })
 })

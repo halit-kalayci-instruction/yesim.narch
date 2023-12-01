@@ -6,9 +6,17 @@
 		<title>Document</title>
 	</head>
 	<body>
-		<input type="text" id="group" placeholder="Grup adı.." />
-		<button id="joinBtn">Gruba Katıl</button>
+		<input id="token" type="text" />
+		<button id="connectBtn">Bağlan</button>
+		<br />
 
+		<select id="roleSelect">
+			<option value="Admin">Admin</option>
+			<option value="HR">HR</option>
+			<option value="SD">Software Development</option>
+		</select>
+		<input id="message" />
+		<button id="sendBtn">Gönder</button>
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"
 			integrity="sha512-7rhBJh1om/W5Ztx7WiYOR9h2wlSaTmPyQMoHFtbT/FVNIA12y6S6I8HY9mrBS1uJ3dSU/R3qaSAXsGYuRjMDxg=="
