@@ -1,15 +1,25 @@
+const input = document.querySelector("#message")
+const btn = document.querySelector("#sendBtn")
+
+let connectionId;
 const connection = new signalR
     .HubConnectionBuilder()
     .withUrl("https://localhost:7285/api/chat", { skipNegotiation: true, transport: signalR.HttpTransportType.WebSockets })
     .build();
 
-connection.start()
-
-// Client tarafından Sunucu tarafını execute etmek
-setTimeout(() => {
-    connection.invoke("SendMessage", "merhaba").catch((err) => console.log("Gönderilemedi:", err));
-}, 3000);
-
+// on fonksiyonları
 connection.on('MessageReceived', (message) => {
     console.log("Sunucudan bir mesaj geldi: " + message);
+})
+
+connection.on('ConnectedToHub', (id) => {
+    connectionId = id;
+})
+
+connection.start().then(() => { })
+
+// Client tarafından Sunucu tarafını execute etmek
+
+btn.addEventListener('click', () => {
+    connection.invoke("SendMessage", input.value).catch((err) => console.log("Gönderilemedi:", err));
 })
