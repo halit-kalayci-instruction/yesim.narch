@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Application.Hubs
 {
-    [Authorize]
     public class NotificationHub : Hub
     {
         public override Task OnConnectedAsync()

@@ -23,13 +23,14 @@ public class CreateBrandCommand:IRequest<CreatedBrandResponse>,ITransactionalReq
         private readonly IBrandRepository _brandRepository;
         private readonly IMapper _mapper;
         private readonly BrandBusinessRules _brandBusinessRules;
-        private readonly IHubContext<NotificationHub> _notificationHub; 
+        private readonly IHubContext<NotificationHub> _notificationHub;
 
-        public CreateBrandCommandHandler(IBrandRepository brandRepository, IMapper mapper, BrandBusinessRules brandBusinessRules)
+        public CreateBrandCommandHandler(IBrandRepository brandRepository, IMapper mapper, BrandBusinessRules brandBusinessRules, IHubContext<NotificationHub> notificationHub)
         {
             _brandRepository = brandRepository;
             _mapper = mapper;
             _brandBusinessRules = brandBusinessRules;
+            _notificationHub = notificationHub;
         }
 
         public async Task<CreatedBrandResponse>? Handle(CreateBrandCommand request, CancellationToken cancellationToken)
