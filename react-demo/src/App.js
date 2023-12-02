@@ -1,5 +1,8 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Example from './components/Example';
+import Homepage from './pages/Homepage';
+import About from './pages/About';
 
 // HTML + JS => JSX
 
@@ -19,25 +22,12 @@ function App() {
   }
 
   return (
-    <>
-      <div className="App">
-        <h3>{name}</h3>
-      </div>
-      {show ? <div>True</div> : <div>False</div>}
-
-      {/* Iterasyon işlemlerinde KEY değeri atanmalıdır. */}
-      <ul>
-        {/* {list.map(element => <li>{element}</li>)} */}
-        {list.map(element => {
-          return <li key={element}>{element}</li>
-        }
-        )}
-      </ul>
-
-      <button onClick={() => onClick()}>Gönder</button>
-
-      <Example title={exampleTitle} />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Homepage />}></Route>
+        <Route path="/about" element={<About />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
