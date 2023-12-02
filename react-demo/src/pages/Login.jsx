@@ -1,20 +1,32 @@
 import React from "react";
 import "./Login.css";
-import {Link} from "react-router-dom";
+import {ErrorMessage, Field, Form, Formik} from "formik";
+import * as Yup from "yup";
+import FormikInput from "../components/FormikInput";
+
 const Login = () => {
+	const initialValues = {email: "", password: ""};
+	const validationSchema = Yup.object().shape({
+		email: Yup.string()
+			.required("E-posta alanı zorunludur.")
+			.email("Lütfen düzgün bir mail giriniz."),
+		password: Yup.string().required().min(3),
+	});
 	return (
 		<div id="login" className="content-center">
-			<form>
-				<div>
-					<label htmlFor="email">Email Address</label>
-					<input id="email" name="email" type="email" />
-				</div>
-
-				<div>
-					<label htmlFor="password">Password</label>
-					<input id="password" name="password" type="password" />
-				</div>
-			</form>
+			<Formik
+				initialValues={initialValues}
+				onSubmit={values => {
+					console.log(values);
+				}}
+				validationSchema={validationSchema}
+			>
+				<Form>
+					<FormikInput name="email" title="E-Posta" />
+					<FormikInput type="password" name="password" title="Şifre" />
+					<button type="submit">Giriş Yap</button>
+				</Form>
+			</Formik>
 		</div>
 	);
 };
