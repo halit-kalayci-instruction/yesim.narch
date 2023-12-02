@@ -4,6 +4,7 @@ import Example from './components/Example';
 import Homepage from './pages/Homepage';
 import About from './pages/About';
 import BrandDetail from './pages/BrandDetail';
+import Login from './pages/Login';
 
 // HTML + JS => JSX
 
@@ -27,6 +28,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Homepage />}></Route>
         <Route path="/about" element={<About />}></Route>
+        <Route path="/login" element={<Login />}></Route>
         <Route path='/brand-detail/:id' element={<BrandDetail />}></Route>
       </Routes>
     </BrowserRouter>

@@ -34,7 +34,7 @@ function About() {
 	// değişken değişirse inputun içi değişsin
 	// input değişirse değişken değişsin
 	return (
-		<div>
+		<div className="content-center">
 			<form>
 				<input
 					type="text"
