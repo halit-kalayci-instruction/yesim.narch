@@ -4,7 +4,12 @@ export const AuthContext = createContext();
 
 
 export const AuthProvider = (props) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const calculateAuthenticatedData = () => {
+        return localStorage.getItem("token") != null;
+    }
+
+    const [isAuthenticated, setIsAuthenticated] = useState(calculateAuthenticatedData());
+
 
 
     return <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
