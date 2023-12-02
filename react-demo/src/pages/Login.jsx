@@ -1,12 +1,14 @@
-import React from "react";
+import React, {useContext} from "react";
 import "./Login.css";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import FormikInput from "../components/FormikInput";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {AuthContext} from "../contexts/AuthContext";
 
 const Login = () => {
+	const authContext = useContext(AuthContext);
 	const navigate = useNavigate();
 	const initialValues = {email: "", password: ""};
 	const validationSchema = Yup.object().shape({
@@ -26,6 +28,7 @@ const Login = () => {
 							navigate("/");
 							let token = response.data.accessToken.token;
 							localStorage.setItem("token", token);
+							authContext.setIsAuthenticated(true);
 						})
 						.catch(err => {
 							alert("E-posta veya şifre yanlış");
