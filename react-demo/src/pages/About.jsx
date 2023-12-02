@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 function About() {
 	const [name, setName] = useState("");
@@ -21,14 +22,12 @@ function About() {
 		axios
 			.post("https://localhost:7285/api/Brands", {name: name})
 			.then(response => {
-				console.log("istek başarılı sonlandı:", response);
+				fetchBrands();
+				//setBrands([...brands, response.data]);
+				setName("");
 			})
-			.catch(err => {
-				console.log("İstek hatalı sonlandı:", err);
-			})
-			.finally(() => {
-				console.log("İstek cevabı geldi.");
-			});
+			.catch(err => {})
+			.finally(() => {});
 	};
 
 	// Two Way Data Binding
@@ -50,9 +49,9 @@ function About() {
 
 			<ul>
 				{brands.map(brand => (
-					<li key={brand.id}>
-						{brand.id} - {brand.name}
-					</li>
+					<Link to={"/brand-detail/" + brand.id}>
+						<li key={brand.id}>{brand.name}</li>
+					</Link>
 				))}
 			</ul>
 		</div>
