@@ -1,4 +1,5 @@
 import './App.css';
+import Example from './components/Example';
 
 // HTML + JS => JSX
 
@@ -11,6 +12,11 @@ function App() {
   let name = "Halit";
   let show = true;
   let list = ["a", "b", "c"]
+  let exampleTitle = "Merhaba, Kodlama IO";
+
+  function onClick() {
+    console.log("Butona tıklandı")
+  }
 
   return (
     <>
@@ -19,13 +25,18 @@ function App() {
       </div>
       {show ? <div>True</div> : <div>False</div>}
 
+      {/* Iterasyon işlemlerinde KEY değeri atanmalıdır. */}
       <ul>
         {/* {list.map(element => <li>{element}</li>)} */}
         {list.map(element => {
-          return <li>{element}</li>
+          return <li key={element}>{element}</li>
         }
         )}
       </ul>
+
+      <button onClick={() => onClick()}>Gönder</button>
+
+      <Example title={exampleTitle} />
     </>
   );
 }
