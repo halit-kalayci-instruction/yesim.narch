@@ -15,11 +15,11 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Brands.Queries.GetList;
 
-public class GetListBrandQuery:IRequest<GetListResponse<GetListBrandListItemDto>>, ISecuredRequest
+public class GetListBrandQuery:IRequest<GetListResponse<GetListBrandListItemDto>>
 {
     public PageRequest PageRequest { get; set; }
 
-    public string[] Roles => new string[] { "GetListBrand" };
+    //public string[] Roles => new string[] { "GetListBrand" };
 
     public class GetListBrandQueryHandler : IRequestHandler<GetListBrandQuery, GetListResponse<GetListBrandListItemDto>>
     {
