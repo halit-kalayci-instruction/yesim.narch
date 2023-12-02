@@ -6,7 +6,11 @@ function FormikInput(props) {
 	return (
 		<div className="d-flex">
 			<label htmlFor={props.name}>{props.title}</label>
-			<Field name={props.name} type={props.type || "text"} />
+			<Field
+				className="form-control"
+				name={props.name}
+				type={props.type || "text"}
+			/>
 			<ErrorMessage name={props.name}>
 				{message => <span style={{color: "red"}}>{message}</span>}
 			</ErrorMessage>

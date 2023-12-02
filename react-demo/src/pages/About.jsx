@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {Link} from "react-router-dom";
+import axiosInstance from "../utilities/axiosInterceptors";
 
 function About() {
 	const [name, setName] = useState("");
@@ -11,16 +12,14 @@ function About() {
 	}, []);
 
 	const fetchBrands = () => {
-		axios
-			.get("https://localhost:7285/api/Brands?PageIndex=0&PageSize=20")
-			.then(response => {
-				setBrands(response.data.items);
-			});
+		axiosInstance.get("Brands?PageIndex=0&PageSize=20").then(response => {
+			setBrands(response.data.items);
+		});
 	};
 
 	const submit = () => {
-		axios
-			.post("https://localhost:7285/api/Brands", {name: name})
+		axiosInstance
+			.post("Brands", {name: name})
 			.then(response => {
 				fetchBrands();
 				//setBrands([...brands, response.data]);
